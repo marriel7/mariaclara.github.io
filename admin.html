@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Administração — UrbanKick</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f0f2f5;
+      margin: 0;
+      display: flex;
+    }
+    .sidebar {
+      width: 250px;
+      background-color: #262626; /* Cor escura do login */
+      color: white;
+      padding: 2rem 1rem;
+      height: 100vh;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+    }
+    .sidebar h2 {
+      text-align: center;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid #4a4a4a; /* Borda mais escura */
+      padding-bottom: 1rem;
+      font-weight: 300;
+    }
+    .admin-menu button {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 1rem 1.5rem;
+      background-color: transparent;
+      border: none;
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s, color 0.3s;
+      border-radius: 8px;
+      margin-bottom: 0.5rem;
+    }
+    .admin-menu button:hover, .admin-menu button.active {
+      background-color: #383838; /* Cinza escuro no hover/ativo */
+    }
+    .admin-menu button.active {
+      font-weight: bold;
+    }
+    .content {
+      flex-grow: 1;
+      padding: 2rem;
+    }
+    .section {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      display: none;
+      min-height: 80vh;
+    }
+    .section h2 {
+      margin-top: 0;
+      color: #333;
+      border-bottom: 2px solid #262626; /* Borda escura */
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    #relatorios { display: block; } /* Mostra a seção inicial */
+    .logout-button {
+      margin-top: auto;
+      background-color: #cc0000; /* Vermelho escuro para o botão de sair */
+      color: white;
+      border: none;
+      padding: 0.75rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+    .logout-button:hover {
+      background-color: #a00000;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1.5rem;
+    }
+    .data-table th, .data-table td {
+      border: 1px solid #ddd;
+      padding: 12px;
+      text-align: left;
+    }
+    .data-table th {
+      background-color: #f2f2f2;
+      font-weight: 600;
+      color: #333;
+    }
+    .card {
+      background: #f8f9fa;
+      border: 1px solid #e9ecef;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      display: inline-block;
+      margin-right: 1rem;
+    }
+    .card h3 {
+      margin-top: 0;
+      color: #333; /* Cor neutra */
+    }
+    .card p {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin: 0;
+    }
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    .form-group textarea {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      resize: vertical;
+    }
+    .submit-button {
+      padding: 0.75rem 1.5rem;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background-color 0.3s;
+    }
+    .submit-button:hover {
+      background-color: #218838;
+    }
+    .delete-button {
+      padding: 0.5rem 1rem;
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="sidebar">
+    <h2>UrbanKick Admin</h2>
+    <div class="admin-menu">
+      <button onclick="showSection('relatorios', this)" class="active">Relatórios</button>
+      <button onclick="showSection('vendas', this)">Vendas</button>
+      <button onclick="showSection('cadastro', this)">Cadastro de Mercadoria</button>
+      <button onclick="showSection('excluir', this)">Excluir</button>
+    </div>
+    <button class="logout-button" onclick="logout()">Sair</button>
+  </div>
+
+  <div class="content">
+    <div id="relatorios" class="section">
+      <h2>Relatórios</h2>
+      <div class="card">
+        <h3>Vendas no Mês</h3>
+        <p>R$ 15.250,00</p>
+      </div>
+      <div class="card">
+        <h3>Itens Vendidos</h3>
+        <p>128</p>
+      </div>
+      <div class="card">
+        <h3>Estoque Total</h3>
+        <p>354 itens</p>
+      </div>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Produto Mais Vendido</th>
+            <th>Vendas</th>
+            <th>Estoque</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Tênis Air Voador 3000</td>
+            <td>45</td>
+            <td>12</td>
+          </tr>
+          <tr>
+            <td>Chuteira Urbana Pro X</td>
+            <td>28</td>
+            <td>25</td>
+          </tr>
+          <tr>
+            <td>Sandália Confort Fit</td>
+            <td>19</td>
+            <td>50</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="vendas" class="section">
+      <h2>Histórico de Vendas</h2>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>ID da Venda</th>
+            <th>Produto</th>
+            <th>Quantidade</th>
+            <th>Valor Total</th>
+            <th>Data</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>#202401</td>
+            <td>Tênis Air Voador 3000</td>
+            <td>1</td>
+            <td>R$ 299,99</td>
+            <td>14/09/2025</td>
+          </tr>
+          <tr>
+            <td>#202402</td>
+            <td>Chuteira Urbana Pro X</td>
+            <td>2</td>
+            <td>R$ 559,98</td>
+            <td>13/09/2025</td>
+          </tr>
+          <tr>
+            <td>#202403</td>
+            <td>Tênis Air Voador 3000</td>
+            <td>1</td>
+            <td>R$ 299,99</td>
+            <td>13/09/2025</td>
+          </tr>
+          <tr>
+            <td>#202404</td>
+            <td>Sandália Confort Fit</td>
+            <td>1</td>
+            <td>R$ 89,90</td>
+            <td>12/09/2025</td>
+          </tr>
+          <tr>
+            <td>#202405</td>
+            <td>Tênis Esportivo Ligeiro</td>
+            <td>1</td>
+            <td>R$ 199,90</td>
+            <td>12/09/2025</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="cadastro" class="section">
+      <h2>Cadastro de Mercadoria</h2>
+      <form>
+        <div class="form-group">
+          <label for="product-name">Nome do Produto</label>
+          <input type="text" id="product-name" placeholder="Ex: Tênis Esportivo Ligeiro" required>
+        </div>
+        <div class="form-group">
+          <label for="product-category">Categoria</label>
+          <select id="product-category">
+            <option>Tênis</option>
+            <option>Chuteira</option>
+            <option>Sandália</option>
+            <option>Acessórios</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="product-price">Preço</label>
+          <input type="number" id="product-price" placeholder="R$ 199.90" step="0.01" required>
+        </div>
+        <div class="form-group">
+          <label for="product-stock">Estoque</label>
+          <input type="number" id="product-stock" placeholder="25" required>
+        </div>
+        <div class="form-group">
+          <label for="product-colors">Cores Disponíveis</label>
+          <input type="text" id="product-colors" placeholder="Ex: Preto, Branco, Vermelho">
+        </div>
+        <div class="form-group">
+          <label for="product-description">Descrição</label>
+          <textarea id="product-description" rows="4" placeholder="Descrição detalhada do produto..."></textarea>
+        </div>
+        <button type="submit" class="submit-button">Cadastrar Produto</button>
+      </form>
+    </div>
+
+    <div id="excluir" class="section">
+      <h2>Excluir Produtos</h2>
+      <p>Selecione um produto para remover permanentemente do sistema.</p>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nome do Produto</th>
+            <th>Categoria</th>
+            <th>Ação</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>URB-101</td>
+            <td>Tênis Air Voador 3000</td>
+            <td>Tênis</td>
+            <td><button class="delete-button">Excluir</button></td>
+          </tr>
+          <tr>
+            <td>URB-102</td>
+            <td>Chuteira Urbana Pro X</td>
+            <td>Chuteira</td>
+            <td><button class="delete-button">Excluir</button></td>
+          </tr>
+          <tr>
+            <td>URB-103</td>
+            <td>Sandália Confort Fit</td>
+            <td>Sandália</td>
+            <td><button class="delete-button">Excluir</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
+    if (isLoggedIn !== 'true') {
+      window.location.href = 'login.html';
+    }
+
+    function showSection(sectionId, button) {
+      const sections = document.querySelectorAll('.section');
+      sections.forEach(sec => sec.style.display = 'none');
+      
+      const buttons = document.querySelectorAll('.admin-menu button');
+      buttons.forEach(btn => btn.classList.remove('active'));
+
+      document.getElementById(sectionId).style.display = 'block';
+      button.classList.add('active');
+    }
+
+    function logout() {
+      localStorage.removeItem('isLoggedIn');
+      window.location.href = 'login.html';
+    }
+  </script>
+
+</body>
+</html>
